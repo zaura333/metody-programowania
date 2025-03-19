@@ -69,7 +69,6 @@ int main()
 
     ifstream input("input.txt");
     vector<vector<int>> testy;
-    int i = 0;
 
     if (!input.is_open()) {
         cout << "Nie udało się otworzyć pliku z danymi wejściowymi";
@@ -81,10 +80,19 @@ int main()
 		vector<int> nk;
 		char* token = strtok(curr, " ");
 		while (token != NULL) {
+            // Sprawdzanie, czy dane są liczbami
+            if (!isdigit(token[0]) && token[0] != '-') {
+                cout << "Dane n oraz k muszą być liczbami. Linia zostanie pominięta. Zły format danych: " << curr << "\n";
+                nk.clear();
+                break;
+            }
 			nk.push_back(atoi(token));
 			token = strtok(NULL, " ");
 		}
-        i++;
+        if (nk.size() != 2) {
+            cout << "Za mało danych w linii. Linia zostanie pominięta: " << curr << "\n";
+            continue;
+        }
         testy.push_back(nk);
     }
 
@@ -96,8 +104,16 @@ int main()
         return -1;
     }
 
+    // Sprawdzanie błędów pisania do pliku
+    if (output.fail()) {
+        cout << "Error writing to output file. Exiting program.\n";
+        return -1;
+    }
+
+    output << "ALGORYTMY GENERUJĄCE KOMBINACJE\n";
+
     if (testy.empty()) {
-        output << "Brak danych wejściowych w pliku";
+        output << "Brak danych wejściowych w pliku lub dane są niepoprawne.";
         output.close();
         return 0;
     }
@@ -106,7 +122,7 @@ int main()
 
     for (int t = 0; t < testy.size(); t++) {
         output << "\nTEST " << t + 1 << ":\n";
-        output << "Dane wejsciowe:";
+        output << "Dane wejściowe:";
 
         vector<int> nk = testy[t];
 
@@ -114,9 +130,29 @@ int main()
             output << " " << data;
         }
 
+        if (nk[0] < nk[1]) {
+            output << "\nWartość n nie może być mniejsza od k. Test zostanie pominięty." << endl;
+            continue;
+        }
+
         if (nk[0] > MAX_N || nk[1] > MAX_K) {
             output << "\nZa duże wartości n lub k. Maksymalne wartości to: n = " << MAX_N << ", k = " << MAX_K;
-            output << "\n Test zostanie pominięty.";
+            output << "\n Test zostanie pominięty." << endl;
+            continue;
+        }
+
+        if (nk[0] < 0 || nk[1] < 0) {
+            output << "\nWartości n i k nie mogą być ujemne. Test zostanie pominięty." << endl;
+            continue;
+        }
+
+        if (nk[0] == 0) {
+            output << "\nWartość n nie może być równa 0. Test zostanie pominięty." << endl;
+            continue;
+        }
+
+        if (nk[1] == 0) {
+            output << "\nBrak kombinacji dla k = 0." << endl;
             continue;
         }
 
