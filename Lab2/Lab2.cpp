@@ -60,6 +60,7 @@ int main()
 
     input.close();
 
+    // Otwieranie pliku wyjściowego
     ofstream output("output.txt");
     if (!output.is_open()) {
         cout << "Nie udało się otworzyć pliku z danymi wejściowymi. Program zostanie zakończony.";
@@ -82,6 +83,7 @@ int main()
 
     // Iteracja po testach
     for (int t = 0; t < testy.size(); t++) {
+        output << "\n-----\n";
         output << "\nTEST " << t + 1 << ":\n";
         output << "Dane wejściowe:";
 
@@ -120,14 +122,17 @@ int main()
             continue;
         }
 
+        // Inicjalizacja wektorów z podziałami i wektora przechowującego aktualny podział
         vector<vector<int>> results;
         vector<int> partition(nk[0], 1);
 
+        // Wywołanie funkcji generującej kombinacje i mierzenie czasu
         auto begin = std::chrono::high_resolution_clock::now();
         generatePartitions(0, 0, nk[0], nk[1], partition, results);
         auto end = std::chrono::high_resolution_clock::now();
 
         // Zapisywanie podziałów do pliku wyjściowego
+        output << endl << "Podziały: " << endl;
         for (auto& result : results) {
             for (auto& part : result) {
                 output << part << " ";
@@ -137,7 +142,7 @@ int main()
 
         // Wyświetlanie czasu generacji i liczby podziałów
         std::chrono::duration<double> elapsed = end - begin;
-        output << "Czas generowania podziałów: " << (elapsed.count() * 1000.0) << " ms\n";
+        output << "\nCzas generowania podziałów: " << (elapsed.count() * 1000.0) << " ms\n";
         output << "Łączna liczba wygenerowanych podziałów: " << results.size() << endl;
     }
 
