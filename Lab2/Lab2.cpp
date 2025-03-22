@@ -41,7 +41,8 @@ int main()
 		while (token != NULL) {
             // Sprawdzanie, czy dane są liczbami
             if (!isdigit(token[0]) && token[0] != '-') {
-                cout << "Dane n oraz k muszą być liczbami. Linia zostanie pominięta. Zły format danych: " << curr << "\n";
+                cout << "\nBŁĄD. Wartość: " << token << endl;
+                cout << "Dane n oraz k muszą być liczbami. Dana zostanie pominięta. Zły format danych: " << token[0] << endl;
                 nk.clear();
                 break;
             }
@@ -50,7 +51,8 @@ int main()
 		}
         // Sprawdzenie czy jest n i k
         if (nk.size() != 2) {
-            cout << "Za mało danych w linii. Linia zostanie pominięta: " << curr << "\n";
+            cout << "\nBŁĄD. Wartość: " << curr << endl;
+            cout << "Za mało danych w linii. Linia zostanie pominięta." << endl;
             continue;
         }
         testy.push_back(nk);
@@ -114,7 +116,7 @@ int main()
         }
 
         if (nk[1] == 0) {
-            output << "\nBrak kombinacji dla k = 0." << endl;
+            output << "\nBrak podziałów dla k = 0." << endl;
             continue;
         }
 
@@ -134,11 +136,9 @@ int main()
         }
 
         // Wyświetlanie czasu generacji i liczby podziałów
-        output << std::fixed << std::setprecision(6); // Dla formatu upłyniętego czasu w sekundach
         std::chrono::duration<double> elapsed = end - begin;
-        auto ms = std::chrono::duration_cast<std::chrono::microseconds>(elapsed);
-        output << "Czas generowania podziałów: " << (ms.count() / 1000.0) << " ms\n";
-        output << "Łączna liczba wygenerowanych podziałów: " << results.size();
+        output << "Czas generowania podziałów: " << (elapsed.count() * 1000.0) << " ms\n";
+        output << "Łączna liczba wygenerowanych podziałów: " << results.size() << endl;
     }
 
     output.close();
