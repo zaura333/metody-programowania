@@ -75,6 +75,7 @@ int main()
         return -1;
     }
 
+    // Wczytywanie danych z pliku i dodawanie ich do wektora testów
     char curr[100];
     while (input.getline(curr, 100)) {
 		vector<int> nk;
@@ -89,6 +90,7 @@ int main()
 			nk.push_back(atoi(token));
 			token = strtok(NULL, " ");
 		}
+        // Sprawdzenie czy jest n i k
         if (nk.size() != 2) {
             cout << "Za mało danych w linii. Linia zostanie pominięta: " << curr << "\n";
             continue;
@@ -120,6 +122,7 @@ int main()
 
     output << std::fixed << std::setprecision(6); // Dla formatu upłyniętego czasu w sekundach
 
+    // Iteracja po testach
     for (int t = 0; t < testy.size(); t++) {
         output << "\nTEST " << t + 1 << ":\n";
         output << "Dane wejściowe:";
@@ -130,6 +133,7 @@ int main()
             output << " " << data;
         }
 
+        // Obsługa nieprawidłowych wartości inputu i edge case'ów
         if (nk[0] < nk[1]) {
             output << "\nWartość n nie może być mniejsza od k. Test zostanie pominięty." << endl;
             continue;
@@ -156,6 +160,7 @@ int main()
             continue;
         }
 
+        // Mierzenie czasu generowania kombinacji
         auto begin = std::chrono::high_resolution_clock::now();
 
         output << "\n\nKombinacje - algorytm klasyczny:\n";
