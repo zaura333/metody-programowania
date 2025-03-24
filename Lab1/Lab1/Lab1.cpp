@@ -15,13 +15,14 @@ void printCombination(const vector<int>& comb, ofstream& ofs) {
 }
 
 // Funkcja generująca wszystkie kombinacje wg algorytmu klasycznego
-void generateCombinations(int n, int k, ofstream& ofs) {
+vector<vector<int>> generateCombinations(int n, int k) {
+    vector<vector<int>> combinations;
     vector<int> comb(k);
     // Inicjalizacja pierwszej kombinacji: [1, 2, ..., k]
     for (int i = 0; i < k; i++)
         comb[i] = i + 1;
 
-    printCombination(comb, ofs);  // Zapisujemy początkową kombinację
+    combinations.push_back(comb);  // Zapisujemy początkową kombinację
 
     while (true) {
         int i = k - 1;  // Zaczynamy od ostatniego elementu
@@ -33,19 +34,22 @@ void generateCombinations(int n, int k, ofstream& ofs) {
         // Resetujemy wszystkie elementy po pozycji i tak, aby tworzyły ciąg rosnący
         for (int j = i + 1; j < k; j++)
             comb[j] = comb[i] + (j - i);
-        printCombination(comb, ofs);  // Zapisujemy nową kombinację
+        combinations.push_back(comb);  // Zapisujemy nową kombinację
     }
+
+    return combinations;
 }
 
 
 
 // Funkcja generująca kombinacje wg algorytmu Semby
-void generateCombinationsSemby(int n, int k, ofstream& ofs) {
+vector<vector<int>> generateCombinationsSemby(int n, int k) {
+    vector<vector<int>> combinations;
     vector<int> comb(k);
     // Inicjalizacja pierwszej kombinacji: [1, 2, ..., k]
     for (int i = 0; i < k; i++)
         comb[i] = i + 1;
-    printCombination(comb, ofs);  // Zapisujemy początkową kombinację
+    combinations.push_back(comb);  // Zapisujemy początkową kombinację
 
     while (true) {
         int i = k - 1;  // Rozpoczynamy od ostatniego elementu
@@ -57,8 +61,10 @@ void generateCombinationsSemby(int n, int k, ofstream& ofs) {
         // Ustawiamy kolejne elementy jako ciąg liczb następujących po poprzednim
         for (int j = i + 1; j < k; j++)
             comb[j] = comb[j - 1] + 1;
-        printCombination(comb, ofs);  // Zapisujemy nową kombinację
+        combinations.push_back(comb);  // Zapisujemy nową kombinację
     }
+
+    return combinations;
 }
 
 int main()
@@ -120,7 +126,7 @@ int main()
         return 0;
     }
 
-    output << std::fixed << std::setprecision(6); // Dla formatu upłyniętego czasu w sekundach
+    output << std::fixed << std::setprecision(4); // Dla formatu upłyniętego czasu w sekundach
 
     // Iteracja po testach
     for (int t = 0; t < testy.size(); t++) {
@@ -164,18 +170,28 @@ int main()
         auto begin = std::chrono::high_resolution_clock::now();
 
         output << "\n\nKombinacje - algorytm klasyczny:\n";
-        generateCombinations(nk[0], nk[1], output);
+        vector<vector<int>> combinationsClassic = generateCombinations(nk[0], nk[1]);
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - begin;
-        output << "Czas generowania kombinacji algorytmu klasycznego: " << elapsed.count() << " s\n";
+
+        for (auto& comb : combinationsClassic) {
+            printCombination(comb, output);
+        }
+
+        output << "Czas generowania kombinacji algorytmu klasycznego: " << (elapsed.count() * 1000.0) << " ms\n";
 
         begin = std::chrono::high_resolution_clock::now();
 
         output << "\n\nKombinacje - algorytm Semby:\n";
-        generateCombinationsSemby(nk[0], nk[1], output);
+        vector<vector<int>> combinationsSemba = generateCombinationsSemby(nk[0], nk[1]);
         end = std::chrono::high_resolution_clock::now();
         elapsed = end - begin;
-        output << "Czas generowania kombinacji algorytmu Semby: " << elapsed.count() << " s\n";
+
+        for (auto& combSemba : combinationsSemba) {
+            printCombination(combSemba, output);
+        }
+
+        output << "Czas generowania kombinacji algorytmu Semby: " << (elapsed.count() * 1000.0) << " ms\n";
     }
 
     output.close();
